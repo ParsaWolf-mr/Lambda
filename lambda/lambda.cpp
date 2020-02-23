@@ -1,10 +1,12 @@
 #include <iostream>
-#include <array>
 #include <algorithm>
 #include <functional>
+#include <array>
+#include <vector>
 
+using MyArray = std::array <int, 5>;
+using MyVector = std::vector<MyArray::value_type>;
 
-using MyArray = std::array<int, 5>;
 
 void PrintArray(const std::function<void(MyArray::value_type)>& myfunction) {
 	MyArray myarray{ 1,2,3,4,5 };
@@ -14,13 +16,24 @@ void PrintArray(const std::function<void(MyArray::value_type)>& myfunction) {
 
 int main() {
 
-	auto myCluser = [](auto&& element) {
+	MyVector myCopy;
+	auto myCluster = [&myCopy](const MyArray::value_type& element) {
 		std::cout << element << std::endl;
+		myCopy.push_back(element);
 	};
 
-	std::cout << typeid(myCluser).name() << std::endl;
+	std::cout << "myCluster type: " << typeid(myCluster).name() << std::endl;
 
-	PrintArray(myCluser);
+	PrintArray(myCluster);
+
+
+	std::cout << "MyCopy: " << std::endl;
+
+	std::for_each(myCopy.begin(), myCopy.end(), [](const MyArray::value_type& number) {
+		std::cout << number << std::endl;
+		});
+
+
 
 	return 0;
 }
